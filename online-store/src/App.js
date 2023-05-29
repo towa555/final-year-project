@@ -4,29 +4,35 @@ import Product from './pages/Product'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Cart from './pages/Cart'
-import { Routes,Route ,Navigate} from "react-router-dom"
+import Account from './pages/Account';
+import { Routes,Route } from "react-router-dom"
 import Success from "./pages/Success";
-import { useSelector } from "react-redux";
+import { AuthContextProvider } from './contexts/AuthContext';
+import ProtectedRoute from './pages/ProtectedRoute';
 function App() {
-  const user = useSelector((state) => state.user.currentUser);
+
   return (
     <div className="App">
+        <AuthContextProvider>
     <Routes>
       <Route path="/" element={ <HOME/> }></Route>
 
       <Route path="productlist/:category" element={ <ProductList/> }></Route>
 
-      <Route path="product/:id" element={ <Product/> }></Route>
+      <Route path="product/:id" element={ <ProtectedRoute><Product/></ProtectedRoute>  }></Route>
 
-      <Route path="login" element={ user ? <Navigate to="/" /> : <Login /> }></Route>
+      <Route path="login" element={ <Login /> }></Route>
 
-      <Route path="register" element={ user ? <Navigate to="/"/> :  <Register /> }></Route>
+      <Route path="register" element={  <Register /> }></Route>
 
-      <Route path="Cart" element={ <Cart/> }></Route>
+      <Route path="Cart" element={  <ProtectedRoute><Cart/></ProtectedRoute>    }></Route>
 
-      <Route path="Cart" element={ <Success/> }></Route>
+      <Route path="account" element={  <ProtectedRoute><Account/></ProtectedRoute>    }></Route>
+
+      <Route path="Cart" element={  <ProtectedRoute><Success/></ProtectedRoute>  }></Route>
 
     </Routes>
+    </AuthContextProvider>
     </div>
   );
 }

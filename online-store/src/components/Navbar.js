@@ -1,5 +1,5 @@
 import { Badge } from "@material-ui/core";
-import { Search, ShoppingCartTwoTone  } from "@material-ui/icons";
+import { Search, ShoppingCartTwoTone } from "@material-ui/icons";
 import React from 'react';
 import styled from 'styled-components'
 import { mobile } from "../responsive";
@@ -71,28 +71,31 @@ const MenuItem = styled.div`
 
 
 const Navbar = () => {
-    const quantity = useSelector(state=>state.cart.quantity)
+  const quantity = useSelector(state => state.cart.quantity)
   return (
     <Container>
       <Wrapper>
         <Left>
           <Language>EN</Language>
           <SearchContainer>
-            <Input/>
+            <Input />
             <Search style={{ color: "gray", fontSize: 16 }} />
           </SearchContainer>
         </Left>
-        <Center><Logo>BUY.IT</Logo></Center>
+        <Center><Logo>
+          <Link to="/">BUY.IT</Link>
+        </Logo></Center>
         <Right>
 
-       <Link to="/register"ink><MenuItem>REGISTER</MenuItem></Link>
-      <Link to="/login"><MenuItem>SIGN IN</MenuItem></Link>
-       <Link to="/cart">
-          <MenuItem>
-            <Badge badgeContent={quantity} color="primary">
-              <ShoppingCartTwoTone  />
-            </Badge>
-          </MenuItem>
+          <Link to="/register"><MenuItem>REGISTER</MenuItem></Link>
+          <Link to="/login"><MenuItem>SIGN IN</MenuItem></Link>
+          <Link to="/account"><MenuItem>A</MenuItem></Link>
+          <Link to="/cart">
+            <MenuItem>
+              <Badge badgeContent={quantity} color="primary">
+                <ShoppingCartTwoTone />
+              </Badge>
+            </MenuItem>
           </Link>
         </Right>
       </Wrapper>

@@ -1,11 +1,14 @@
-import { useState } from "react";
 import styled from "styled-components";
-import { login } from "../redux/apiCalls";
-import { mobile } from "../responsive";
-import { useDispatch, useSelector } from "react-redux";
+import {mobile} from "../responsive";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserAuth } from '../contexts/AuthContext';
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+
 
 const Container = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background: linear-gradient(
       rgba(255, 255, 255, 0.5),
@@ -17,6 +20,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow:hidden;
 `;
 
 const Wrapper = styled.div`
@@ -53,7 +57,7 @@ const Button = styled.button`
   margin-bottom: 10px;
 `;
 
-const Link = styled.a`
+const Linker = styled.a`
   margin: 5px 0px;
   font-size: 12px;
   text-decoration: underline;
@@ -61,39 +65,45 @@ const Link = styled.a`
 `;
 
 
-const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
-  const { isFetching, error } = useSelector((state) => state.user);
 
-  const handleClick = (e) => {
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { signIn } = UserAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(dispatch, { username, password });
+    setError('')
+    try {
+      await signIn(email, password)
+      navigate('/')
+    } catch (e) {
+      setError(e.message)
+      console.log(e.message)
+    }
   };
+
   return (
+    <div>
+    <Navbar/>
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
-        <Form>
-          <Input
-            placeholder="username"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <Input
-            placeholder="password"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button onClick={handleClick} disabled={isFetching}>
-            LOGIN
-          </Button>
-          {error && <error>Something went wrong...</error>}
-          <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-          <Link>CREATE A NEW ACCOUNT</Link>
+        <Form onSubmit={handleSubmit}>
+          <Input  onChange={(e) => setEmail(e.target.value)} placeholder="Email Address" />
+          <Input onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+          <Button>LOGIN</Button>
+          <Linker>DO NOT YOU REMEMBER THE PASSWORD?</Linker>
+          <Linker>  <Link to="/register">
+      DONT HAVE AN ACCOUNT REGISTER HERE
+          </Link></Linker>
         </Form>
       </Wrapper>
     </Container>
+    <Footer/>
+    </div>
   );
 };
 
